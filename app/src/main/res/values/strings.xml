@@ -3,4 +3,9 @@
     <string name="cpsText">cps</string>
     <string name="ShopButton">Shop</string>
     <string name="Cookies">Cookies</string>
+    <string name="Back">Back</string>
+    <string name="SunglassButton">Sunglasses +1 cps 10C</string>
+    <string name="CookieButton">Cookie++ +10 cps 100C</string>
+    <string name="SliperButton">Sliper +100 cps 1000C</string>
+    <string name="ControllerButton">Controler +1 cp/Shake 10C</string>
 </resources>

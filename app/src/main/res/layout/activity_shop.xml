@@ -44,6 +44,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="129dp"
         android:layout_height="30dp"
         android:orientation="horizontal"
@@ -80,20 +81,10 @@
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
-
-    <ImageView
-        android:id="@+id/imageView2"
-        android:layout_width="207dp"
-        android:layout_height="230dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/ShopView"
-        tools:srcCompat="@tools:sample/avatars" />
 
     <Button
         android:id="@+id/ShopButton"
@@ -106,7 +97,7 @@
         android:insetTop="0dp"
         android:insetBottom="0dp"
         android:shadowColor="#D0455C"
-        android:text="@string/ShopButton"
+        android:text="@string/Back"
         android:textAlignment="center"
         android:textColor="@color/black"
         android:textColorHighlight="#D0455C"
@@ -117,8 +108,87 @@
         app:iconTint="#D0455C"
         app:layout_constraintBottom_toBottomOf="@+id/ShopView"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:rippleColor="#D0455C"
         app:strokeColor="#D0455C" />
+
+    <LinearLayout
+        android:layout_width="372dp"
+        android:layout_height="241dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/ShopView"
+        app:layout_constraintStart_toStartOf="@+id/ShopView"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="66dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/imageView12"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+            <ImageView
+                android:id="@+id/imageView11"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+            <ImageView
+                android:id="@+id/imageView10"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:srcCompat="@android:drawable/ic_delete" />
+
+            <ImageView
+                android:id="@+id/imageView9"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                app:srcCompat="@android:drawable/ic_delete" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/SunglassButton"
+                android:layout_width="match_parent"
+                android:layout_height="61dp"
+                android:fontFamily="@font/carter_one"
+                android:text="@string/SunglassButton"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <Button
+                android:id="@+id/CookieButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="@font/carter_one"
+                android:text="@string/CookieButton"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <Button
+                android:id="@+id/SlipersButton"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:fontFamily="@font/carter_one"
+                android:text="@string/SliperButton"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
+            <Button
+                android:id="@+id/ControlerButton"
+                android:layout_width="match_parent"
+                android:layout_height="58dp"
+                android:fontFamily="@font/carter_one"
+                android:text="@string/ControllerButton"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        </LinearLayout>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
