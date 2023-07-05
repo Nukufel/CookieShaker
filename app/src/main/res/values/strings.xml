@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">CookieShaker</string>
+    <string name="cpsText">cps</string>
+    <string name="ShopButton">Shop</string>
+    <string name="Cookies">Cookies</string>
+</resources>
