@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity{
 
     private TextView cookieCTRLabel;
     private static long cookieCTR;
-
     private TextView cpsLabel;
     private static int cps;
     private SensorEventListener sensorListener;
@@ -42,9 +41,20 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        sharedPref = getPreferences(Context.MODE_PRIVATE);
+        Button shopB = findViewById(R.id.ShopButton);
+
+        sharedPref = getPreferences(Context.MODE_MULTI_PROCESS);
+
+        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+
+        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+
+        acceleration = 0;
+        currentAcceleration = SensorManager.GRAVITY_EARTH;
+        lastAcceleration = SensorManager.GRAVITY_EARTH;
 
         updateForCPS();
+
 
         sensorListener = new SensorEventListener() {
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -57,29 +67,16 @@ public class MainActivity extends AppCompatActivity{
             public void onAccuracyChanged(Sensor sensor, int accuracy) {}
         };
 
-        sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
-        sensorManager.registerListener(sensorListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
-
-        acceleration = 0;
-        currentAcceleration = SensorManager.GRAVITY_EARTH;
-        lastAcceleration = SensorManager.GRAVITY_EARTH;
-
-
-        Button shopB = findViewById(R.id.ShopButton);
 
         shopB.setOnClickListener(e -> {
             Intent intent = new Intent(MainActivity.this, ShopActivity.class);
+            intent.putExtra("cookieCTR", cookieCTR);
+            intent.putExtra("cps", cps);
             startActivity(intent);
+            setCTR();
         });
 
-        cookieCTR = sharedPref.getLong("cookieCTR", 0);
-        cookieCTRLabel = findViewById(R.id.CookieCounterMain);
-        cookieCTRLabel.setText(String.valueOf(cookieCTR));
-
-        cps = sharedPref.getInt("cps", 10);
-        cpsLabel = findViewById(R.id.cpsMain);
-        cpsLabel.setText(String.valueOf(cps));
+        setCTR();
     }
 
     @Override
@@ -135,6 +132,17 @@ public class MainActivity extends AppCompatActivity{
         };
 
         thread.start();
+    }
+
+
+    private void setCTR(){
+        cookieCTR = sharedPref.getLong("cookieCTR", 0);
+        cookieCTRLabel = findViewById(R.id.CookieCounterMain);
+        cookieCTRLabel.setText(String.valueOf(cookieCTR));
+
+        cps = sharedPref.getInt("cps", 0);
+        cpsLabel = findViewById(R.id.cpsMain);
+        cpsLabel.setText(String.valueOf(cps));
     }
 
 }

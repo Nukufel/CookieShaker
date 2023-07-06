@@ -11,6 +11,9 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.widget.Button;
+import android.widget.TextView;
+
+import java.util.List;
 
 public class ShopActivity extends AppCompatActivity {
 
@@ -18,14 +21,22 @@ public class ShopActivity extends AppCompatActivity {
     private Item cookieee;
     private Item slipper;
     private Item controler;
-
+    private static long cookieCTRS;
+    private static int cpsS;
+    private TextView cookieCTRShop;
+    private TextView cpsShop;
     private SharedPreferences sharedPref;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        sharedPref  = getPreferences(Context.MODE_PRIVATE);
+        sharedPref  = getPreferences(Context.MODE_MULTI_PROCESS);
+        Bundle mainIntent = getIntent().getExtras();
+
+        cpsS = mainIntent.getInt("cps");
+        cookieCTRS = mainIntent.getLong("cookieCTR");
 
         suglasses = new Item(1,10, sharedPref.getInt("sunglasses",0));
         cookieee = new Item(10, 100, sharedPref.getInt("cookieee",0));
@@ -37,28 +48,64 @@ public class ShopActivity extends AppCompatActivity {
         Button buyCookie = findViewById(R.id.CookieButton);
         Button buySlipper = findViewById(R.id.SlipersButton);
         Button buyControler = findViewById(R.id.ControlerButton);
+        cookieCTRShop = findViewById(R.id.CookieCounterShop);
+        cpsShop = findViewById(R.id.cpsShop);
+        cookieCTRShop.setText(String.valueOf((int) cookieCTRS));
+        cpsShop.setText(String.valueOf((int) cpsS));
 
         backB.setOnClickListener(e -> {
-            Intent intent = new Intent(ShopActivity.this, MainActivity.class);
-            startActivity(intent);
+            save();
+            onStop();
         });
 
         buySunglasses.setOnClickListener(e ->{
-
+            if (cookieCTRS>=suglasses.getPrice()) {
+                cookieCTRS = s.buy(suglasses, cookieCTRS);
+                afterBuy(suglasses);
+            }
         });
 
         buyCookie.setOnClickListener(e ->{
-
+            if (cookieCTRS>=cookieee.getPrice()) {
+                cookieCTRS = s.buy(cookieee, cookieCTRS);
+                afterBuy(cookieee);;
+            }
         });
 
         buySlipper.setOnClickListener(e ->{
-
+            if (cookieCTRS>=slipper.getPrice()) {
+                cookieCTRS = s.buy(slipper, cookieCTRS);
+                afterBuy(slipper);
+            }
         });
 
         buyControler.setOnClickListener(e ->{
-
+            if (cookieCTRS>=controler.getPrice()) {
+                cookieCTRS = s.buy(controler, cookieCTRS);
+                afterBuy(controler);
+            }
         });
     }
+
+    private void afterBuy(Item item){
+        item.setAmount(s.amountUp(item));
+        cpsS = s.calcCPS(suglasses,cookieee,slipper);
+        cookieCTRShop.setText(String.valueOf((int) cookieCTRS));
+        cpsShop.setText(String.valueOf((int) cpsS));
+        save();
+    }
+
+    private void save(){
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("sunglasses", suglasses.getAmount());
+        editor.putInt("controler", controler.getAmount());
+        editor.putInt("slipper", slipper.getAmount());
+        editor.putInt("cookieee", cookieee.getAmount());
+        editor.putLong("cookieCTR", cookieCTRS);
+        editor.putInt("cps", cpsS);
+        editor.apply();
+    }
+
 
     MyService s;
     boolean b = false;
@@ -81,8 +128,7 @@ public class ShopActivity extends AppCompatActivity {
     private ServiceConnection connection = new ServiceConnection() {
 
         @Override
-        public void onServiceConnected(ComponentName className,
-                                       IBinder service) {
+        public void onServiceConnected(ComponentName className, IBinder service) {
             // We've bound to LocalService, cast the IBinder and get LocalService instance.
             MyService.LocalBinder binder = (MyService.LocalBinder) service;
             s = (MyService) binder.getService();
