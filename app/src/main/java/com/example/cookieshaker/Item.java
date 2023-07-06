@@ -4,10 +4,20 @@ public class Item {
     private int cps;
     private int price;
 
+    private int amount;
 
-    public Item(int cps, int price) {
+    public int getAmount() {
+        return amount;
+    }
+
+    public Item(int cps, int price, int amount) {
         this.cps = cps;
         this.price = price;
+        this.amount = amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
     }
 
     public int getCps() {
