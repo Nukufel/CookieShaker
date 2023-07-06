@@ -131,25 +131,28 @@
                 android:id="@+id/imageView12"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@android:drawable/ic_delete" />
+                tools:srcCompat="@drawable/sung_removebg_preview" />
 
             <ImageView
                 android:id="@+id/imageView11"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@android:drawable/ic_delete" />
+                app:srcCompat="@android:drawable/ic_delete"
+                tools:srcCompat="@drawable/cookie_removebg_preview" />
 
             <ImageView
                 android:id="@+id/imageView10"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@android:drawable/ic_delete" />
+                app:srcCompat="@android:drawable/ic_delete"
+                tools:srcCompat="@drawable/png_transparent_flip_flops_sandals_summer_shoes_icon_removebg_preview" />
 
             <ImageView
                 android:id="@+id/imageView9"
                 android:layout_width="match_parent"
                 android:layout_height="60dp"
-                app:srcCompat="@android:drawable/ic_delete" />
+                app:srcCompat="@android:drawable/ic_delete"
+                tools:srcCompat="@drawable/_6_267132_game_controller_png_transparent_picture_playstation_clipart_png_removebg_preview" />
         </LinearLayout>
 
         <LinearLayout
