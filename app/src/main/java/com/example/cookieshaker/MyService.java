@@ -24,6 +24,6 @@ public class MyService extends Service {
     }
 
     public int calcCPS(Item sunglasses, Item cookieee, Item slippers){
-        return 0;
+        return (sunglasses.getCps()*sunglasses.getAmount())+(cookieee.getCps()*cookieee.getAmount())+(slippers.getCps()*slippers.getAmount());
     }
 }
