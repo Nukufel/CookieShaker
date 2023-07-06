@@ -23,7 +23,6 @@ public class ShopActivity extends AppCompatActivity {
     private Item controler;
     private static long cookieCTRS;
     private static int cpsS;
-    private int cpS;
     private TextView cookieCTRShop;
     private TextView cpsShop;
     private SharedPreferences sharedPref;
@@ -32,6 +31,7 @@ public class ShopActivity extends AppCompatActivity {
     private Button buyCookie;
     private Button buySlipper;
     private Button buyControler;
+    private Button resetB;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +39,9 @@ public class ShopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_shop);
 
         sharedPref  = getSharedPreferences("temp",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
         Bundle mainIntent = getIntent().getExtras();
+
 
         cpsS = mainIntent.getInt("cps");
         cookieCTRS = mainIntent.getLong("cookieCTR");
@@ -48,6 +50,7 @@ public class ShopActivity extends AppCompatActivity {
         cookieee = new Item(10, sharedPref.getInt("cookieeeP", 100), sharedPref.getInt("cookieee",0));
         slipper = new Item(100, sharedPref.getInt("slipperP", 1000), sharedPref.getInt("slipper",0));
         controler = new Item(1, sharedPref.getInt("controllerP", 10), sharedPref.getInt("controller",0));
+
 
         backB = findViewById(R.id.BackButton);
         buySunglasses = findViewById(R.id.SunglassButton);
@@ -59,6 +62,13 @@ public class ShopActivity extends AppCompatActivity {
         cookieCTRShop.setText(String.valueOf((int) cookieCTRS));
         cpsShop.setText(String.valueOf((int) cpsS));
 
+        resetB = findViewById(R.id.resetB);
+        resetB.setOnClickListener(e -> {
+            reset(editor);
+            cookieCTRShop.setText("0");
+            cpsShop.setText("0");
+        });
+
         backB.setOnClickListener(e -> {
             finish();
         });
@@ -66,42 +76,45 @@ public class ShopActivity extends AppCompatActivity {
         buySunglasses.setOnClickListener(e ->{
             if (cookieCTRS>=suglasses.getPrice()) {
                 cookieCTRS = s.buy(suglasses, cookieCTRS);
-                afterBuy(suglasses);
+                editor.putLong("cookieCTR", cookieCTRS);
+                afterBuy(suglasses, editor);
             }
         });
 
         buyCookie.setOnClickListener(e ->{
             if (cookieCTRS>=cookieee.getPrice()) {
                 cookieCTRS = s.buy(cookieee, cookieCTRS);
-                afterBuy(cookieee);;
+                editor.putLong("cookieCTR", cookieCTRS);
+                afterBuy(cookieee, editor);;
             }
         });
 
         buySlipper.setOnClickListener(e ->{
             if (cookieCTRS>=slipper.getPrice()) {
                 cookieCTRS = s.buy(slipper, cookieCTRS);
-                afterBuy(slipper);
+                editor.putLong("cookieCTR", cookieCTRS);
+                afterBuy(slipper, editor);
             }
         });
 
         buyControler.setOnClickListener(e ->{
             if (cookieCTRS>=controler.getPrice()) {
                 cookieCTRS = s.buy(controler, cookieCTRS);
-                afterBuy(controler);
+                editor.putLong("cookieCTR", cookieCTRS);
+                afterBuy(controler, editor);
             }
         });
     }
 
-    private void afterBuy(Item item){
+    private void afterBuy(Item item, SharedPreferences.Editor editor){
         item.setAmount(s.amountUp(item));
         cpsS = s.calcCPS(suglasses,cookieee,slipper);
         cookieCTRShop.setText(String.valueOf((int) cookieCTRS));
         cpsShop.setText(String.valueOf((int) cpsS));
-        save();
+        save(editor);
     }
 
-    private void save(){
-        SharedPreferences.Editor editor = sharedPref.edit();
+    private void save(SharedPreferences.Editor editor){
         editor.putInt("sunglasses", suglasses.getAmount());
         editor.putInt("controller", controler.getAmount());
         editor.putInt("slipper", slipper.getAmount());
@@ -109,6 +122,16 @@ public class ShopActivity extends AppCompatActivity {
         editor.putLong("cookieCTR", cookieCTRS);
         editor.putInt("cps", cpsS);
         editor.apply();
+    }
+
+    private void reset(SharedPreferences.Editor editor){
+            editor.putInt("sunglasses", 0);
+            editor.putInt("controller", 0);
+            editor.putInt("slipper", 0);
+            editor.putInt("cookieee", 0);
+            editor.putLong("cookieCTR", 0);
+            editor.putInt("cps", 0);
+            editor.apply();
     }
 
 
