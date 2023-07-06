@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity{
 
     private SharedPreferences sharedPref;
 
+    private  Thread thread;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,25 +44,13 @@ public class MainActivity extends AppCompatActivity{
 
         sharedPref = getPreferences(Context.MODE_PRIVATE);
 
+        updateForCPS();
+
         sensorListener = new SensorEventListener() {
             SharedPreferences.Editor editor = sharedPref.edit();
             @Override
             public void onSensorChanged(SensorEvent event) {
-                float x = event.values[0];
-                float y = event.values[1];
-                float z = event.values[2];
-                lastAcceleration = currentAcceleration;
-
-                currentAcceleration = (float) Math.sqrt(x * x + y * y + z * z);
-                float delta = currentAcceleration - lastAcceleration;
-                acceleration = acceleration * 0.9f + delta;
-
-                if (acceleration > 1) {
-                    cookieCTR++;
-                    cookieCTRLabel.setText(String.valueOf(cookieCTR));
-                    editor.putLong("cookieCTR", cookieCTR);
-                    editor.apply();
-                }
+                cookiesForShake(event, editor);
             }
 
             @Override
@@ -87,7 +77,7 @@ public class MainActivity extends AppCompatActivity{
         cookieCTRLabel = findViewById(R.id.CookieCounterMain);
         cookieCTRLabel.setText(String.valueOf(cookieCTR));
 
-        cps = sharedPref.getInt("cps", 0);
+        cps = sharedPref.getInt("cps", 10);
         cpsLabel = findViewById(R.id.cpsMain);
         cpsLabel.setText(String.valueOf(cps));
     }
@@ -104,6 +94,47 @@ public class MainActivity extends AppCompatActivity{
     protected void onPause() {
         sensorManager.unregisterListener(sensorListener);
         super.onPause();
+    }
+
+    private void cookiesForShake(SensorEvent event, SharedPreferences.Editor editor){
+        float x = event.values[0];
+        float y = event.values[1];
+        float z = event.values[2];
+        lastAcceleration = currentAcceleration;
+
+        currentAcceleration = (float) Math.sqrt(x * x + y * y + z * z);
+        float delta = currentAcceleration - lastAcceleration;
+        acceleration = acceleration * 0.9f + delta;
+
+        if (acceleration > 1) {
+            cookieCTR++;
+            cookieCTRLabel.setText(String.valueOf(cookieCTR));
+            editor.putLong("cookieCTR", cookieCTR);
+            editor.apply();
+        }
+    }
+
+    private void updateForCPS(){
+        thread = new Thread() {
+            @Override
+            public void run() {
+                try {
+                    while (!thread.isInterrupted()) {
+                        Thread.sleep(1000);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                cookieCTR = cookieCTR+cps;
+                                cookieCTRLabel.setText(String.valueOf(cookieCTR));
+                            }
+                        });
+                    }
+                } catch (InterruptedException e) {
+                }
+            }
+        };
+
+        thread.start();
     }
 
 }

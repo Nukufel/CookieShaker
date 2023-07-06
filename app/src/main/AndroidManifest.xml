@@ -12,6 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.CookieShaker"
         tools:targetApi="31">
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".ShopActivity"
             android:exported="false" />
