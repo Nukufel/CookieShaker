@@ -34,7 +34,4 @@ public class MyService extends Service {
     public int amountUp(Item item){
         return item.getAmount()+1;
     }
-
-
-
 }
