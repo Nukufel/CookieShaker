@@ -2,19 +2,15 @@ package com.example.cookieshaker;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Service;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.SharedPreferences;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.List;
 
 public class ShopActivity extends AppCompatActivity {
 
@@ -64,9 +60,40 @@ public class ShopActivity extends AppCompatActivity {
         });
     }
 
+    MyService s;
+    boolean b = false;
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(connection);
+        b = false;
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService.
+        Intent intent = new Intent(this, MyService.class);
+        bindService(intent, connection, Context.BIND_AUTO_CREATE);
+    }
 
+    /** Defines callbacks for service binding, passed to bindService(). */
+    private ServiceConnection connection = new ServiceConnection() {
 
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance.
+            MyService.LocalBinder binder = (MyService.LocalBinder) service;
+            s = (MyService) binder.getService();
+            b = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            b = false;
+        }
+    };
 
 
 
