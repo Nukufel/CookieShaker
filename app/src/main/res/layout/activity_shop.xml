@@ -106,7 +106,7 @@
         android:textSize="24sp"
         android:textStyle="bold"
         app:iconTint="#D0455C"
-        app:layout_constraintBottom_toBottomOf="@+id/ShopView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

@@ -24,7 +24,6 @@ public class MainActivity extends AppCompatActivity{
     private float acceleration;
     private float currentAcceleration;
     private float lastAcceleration;
-
     private TextView cookieCTRLabel;
     private static long cookieCTR;
     private TextView cpsLabel;
@@ -43,7 +42,7 @@ public class MainActivity extends AppCompatActivity{
 
         Button shopB = findViewById(R.id.ShopButton);
 
-        sharedPref = getPreferences(Context.MODE_MULTI_PROCESS);
+        sharedPref = getSharedPreferences("temp",Context.MODE_PRIVATE);
 
         sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -54,7 +53,6 @@ public class MainActivity extends AppCompatActivity{
         lastAcceleration = SensorManager.GRAVITY_EARTH;
 
         updateForCPS();
-
 
         sensorListener = new SensorEventListener() {
             SharedPreferences.Editor editor = sharedPref.edit();
@@ -73,7 +71,6 @@ public class MainActivity extends AppCompatActivity{
             intent.putExtra("cookieCTR", cookieCTR);
             intent.putExtra("cps", cps);
             startActivity(intent);
-            setCTR();
         });
 
         setCTR();
@@ -82,6 +79,7 @@ public class MainActivity extends AppCompatActivity{
     @Override
     protected void onResume() {
         super.onResume();
+        setCTR();
         sensorManager.registerListener(sensorListener,
                 sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
                 SensorManager.SENSOR_DELAY_NORMAL);
@@ -104,7 +102,7 @@ public class MainActivity extends AppCompatActivity{
         acceleration = acceleration * 0.9f + delta;
 
         if (acceleration > 1) {
-            cookieCTR++;
+            cookieCTR = cookieCTR*sharedPref.getInt("controller", 1);
             cookieCTRLabel.setText(String.valueOf(cookieCTR));
             editor.putLong("cookieCTR", cookieCTR);
             editor.apply();
@@ -115,6 +113,7 @@ public class MainActivity extends AppCompatActivity{
         thread = new Thread() {
             @Override
             public void run() {
+                SharedPreferences.Editor editor = sharedPref.edit();
                 try {
                     while (!thread.isInterrupted()) {
                         Thread.sleep(1000);
@@ -123,6 +122,8 @@ public class MainActivity extends AppCompatActivity{
                             public void run() {
                                 cookieCTR = cookieCTR+cps;
                                 cookieCTRLabel.setText(String.valueOf(cookieCTR));
+                                editor.putLong("cookieCTR", cookieCTR);
+                                editor.apply();
                             }
                         });
                     }
@@ -133,7 +134,6 @@ public class MainActivity extends AppCompatActivity{
 
         thread.start();
     }
-
 
     private void setCTR(){
         cookieCTR = sharedPref.getLong("cookieCTR", 0);

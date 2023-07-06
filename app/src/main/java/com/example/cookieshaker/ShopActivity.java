@@ -23,39 +23,44 @@ public class ShopActivity extends AppCompatActivity {
     private Item controler;
     private static long cookieCTRS;
     private static int cpsS;
+    private int cpS;
     private TextView cookieCTRShop;
     private TextView cpsShop;
     private SharedPreferences sharedPref;
+    private Button backB;
+    private Button buySunglasses;
+    private Button buyCookie;
+    private Button buySlipper;
+    private Button buyControler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shop);
 
-        sharedPref  = getPreferences(Context.MODE_MULTI_PROCESS);
+        sharedPref  = getSharedPreferences("temp",Context.MODE_PRIVATE);
         Bundle mainIntent = getIntent().getExtras();
 
         cpsS = mainIntent.getInt("cps");
         cookieCTRS = mainIntent.getLong("cookieCTR");
 
-        suglasses = new Item(1,10, sharedPref.getInt("sunglasses",0));
-        cookieee = new Item(10, 100, sharedPref.getInt("cookieee",0));
-        slipper = new Item(100, 1000, sharedPref.getInt("slipper",0));
-        controler = new Item(1, 10, sharedPref.getInt("controler",0));
+        suglasses = new Item(1,sharedPref.getInt("sunglassP", 10), sharedPref.getInt("sunglasses",0));
+        cookieee = new Item(10, sharedPref.getInt("cookieeeP", 100), sharedPref.getInt("cookieee",0));
+        slipper = new Item(100, sharedPref.getInt("slipperP", 1000), sharedPref.getInt("slipper",0));
+        controler = new Item(1, sharedPref.getInt("controllerP", 10), sharedPref.getInt("controller",0));
 
-        Button backB = findViewById(R.id.BackButton);
-        Button buySunglasses = findViewById(R.id.SunglassButton);
-        Button buyCookie = findViewById(R.id.CookieButton);
-        Button buySlipper = findViewById(R.id.SlipersButton);
-        Button buyControler = findViewById(R.id.ControlerButton);
+        backB = findViewById(R.id.BackButton);
+        buySunglasses = findViewById(R.id.SunglassButton);
+        buyCookie = findViewById(R.id.CookieButton);
+        buySlipper = findViewById(R.id.SlipersButton);
+        buyControler = findViewById(R.id.ControlerButton);
         cookieCTRShop = findViewById(R.id.CookieCounterShop);
         cpsShop = findViewById(R.id.cpsShop);
         cookieCTRShop.setText(String.valueOf((int) cookieCTRS));
         cpsShop.setText(String.valueOf((int) cpsS));
 
         backB.setOnClickListener(e -> {
-            save();
-            onStop();
+            finish();
         });
 
         buySunglasses.setOnClickListener(e ->{
@@ -98,7 +103,7 @@ public class ShopActivity extends AppCompatActivity {
     private void save(){
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putInt("sunglasses", suglasses.getAmount());
-        editor.putInt("controler", controler.getAmount());
+        editor.putInt("controller", controler.getAmount());
         editor.putInt("slipper", slipper.getAmount());
         editor.putInt("cookieee", cookieee.getAmount());
         editor.putLong("cookieCTR", cookieCTRS);
