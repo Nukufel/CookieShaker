@@ -101,7 +101,7 @@ public class MainActivity extends AppCompatActivity{
         float delta = currentAcceleration - lastAcceleration;
         acceleration = acceleration * 0.9f + delta;
 
-        if (acceleration > 10) {
+        if (acceleration > 5) {
             cookieCTR = cookieCTR+sharedPref.getInt("controller", 0)+1;
             cookieCTRLabel.setText(String.valueOf(cookieCTR));
             editor.putLong("cookieCTR", cookieCTR);
